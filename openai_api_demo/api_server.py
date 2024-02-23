@@ -559,7 +559,8 @@ async def create_completion(request: CompletionRequest):
         max_tokens=request.max_tokens or 1024,
         echo=False,
         stream=request.stream,
-        repetition_penalty=request.repetition_penalty
+        repetition_penalty=request.repetition_penalty,
+        tools=request.tools
     )
     logger.debug(f"==== request ====\n{gen_params}")
 
