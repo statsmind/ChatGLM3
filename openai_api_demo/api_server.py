@@ -587,14 +587,7 @@ async def create_completion(request: CompletionRequest):
         response["text"] = response["text"][1:]
     response["text"] = response["text"].strip()
 
-    usage = UsageInfo()
     function_call, finish_reason = None, "stop"
-    if request.tools:
-        try:
-            function_call = process_response(response["text"], use_tool=True)
-        except:
-            logger.warning("Failed to parse tool call, maybe the response is not a tool call or have been answered.")
-
     logger.debug(f"==== message ====\n" + response["text"])
 
     choice_data = CompletionResponseChoice(
@@ -602,9 +595,6 @@ async def create_completion(request: CompletionRequest):
         text=response["text"],
         finish_reason=finish_reason,
     )
-    task_usage = UsageInfo.model_validate(response["usage"])
-    for usage_key, usage_value in task_usage.model_dump().items():
-        setattr(usage, usage_key, getattr(usage, usage_key) + usage_value)
 
     return CompletionResponse(
         model=request.model,
