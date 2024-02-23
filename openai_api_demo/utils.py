@@ -45,17 +45,22 @@ def process_response(output: str, use_tool: bool = False) -> Union[str, dict]:
 
 @torch.inference_mode()
 def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, params: dict):
-    messages = params["messages"]
     tools = params["tools"]
     temperature = float(params.get("temperature", 1.0))
     repetition_penalty = float(params.get("repetition_penalty", 1.0))
     top_p = float(params.get("top_p", 1.0))
     max_new_tokens = int(params.get("max_tokens", 256))
     echo = params.get("echo", True)
-    messages = process_chatglm_messages(messages, tools=tools)
-    query, role = messages[-1]["content"], messages[-1]["role"]
+    if "messages" in params:
+        messages = params["messages"]
+        messages = process_chatglm_messages(messages, tools=tools)
+        query, role = messages[-1]["content"], messages[-1]["role"]
 
-    inputs = tokenizer.build_chat_input(query, history=messages[:-1], role=role)
+        inputs = tokenizer.build_chat_input(query, history=messages[:-1], role=role)
+    else:
+        prompt = params["prompt"]
+        inputs = tokenizer.encode(prompt, return_tensors='pt')
+
     inputs = inputs.to(model.device)
     input_echo_len = len(inputs["input_ids"][0])
 

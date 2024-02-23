@@ -520,6 +520,98 @@ def contains_custom_function(value: str) -> bool:
     return value and 'get_' in value
 
 
+class CompletionRequest(BaseModel):
+    model: str
+    prompt: str
+    temperature: Optional[float] = 0.8
+    top_p: Optional[float] = 0.8
+    max_tokens: Optional[int] = None
+    stream: Optional[bool] = False
+    repetition_penalty: Optional[float] = 1.1
+
+
+class CompletionResponseChoice(BaseModel):
+    index: int
+    text: str
+    finish_reason: str
+
+
+class CompletionResponse(BaseModel):
+    id: str
+    choices: List[CompletionResponseChoice]
+    created: int
+    model: str
+    object: str
+
+
+@app.post("/v1/completions", response_model=CompletionResponse)
+async def create_completion(request: CompletionRequest):
+    global model, tokenizer
+
+    if len(request.prompt) < 1:
+        raise HTTPException(status_code=400, detail="Invalid request")
+
+    gen_params = dict(
+        prompt=request.prompt,
+        temperature=request.temperature,
+        top_p=request.top_p,
+        max_tokens=request.max_tokens or 1024,
+        echo=False,
+        stream=request.stream,
+        repetition_penalty=request.repetition_penalty
+    )
+    logger.debug(f"==== request ====\n{gen_params}")
+
+    if request.stream:
+
+        # Use the stream mode to read the first few characters, if it is not a function call, direct stram output
+        predict_stream_generator = predict_stream(request.model, gen_params)
+        output = next(predict_stream_generator)
+        if not contains_custom_function(output):
+            return EventSourceResponse(predict_stream_generator, media_type="text/event-stream")
+
+        # Obtain the result directly at one time and determine whether tools needs to be called.
+        logger.debug(f"First result output：\n{output}")
+
+        # Handled to avoid exceptions in the above parsing function process.
+        generate = parse_output_text(request.model, output)
+        return EventSourceResponse(generate, media_type="text/event-stream")
+
+    # Here is the handling of stream = False
+    response = generate_chatglm3(model, tokenizer, gen_params)
+
+    # Remove the first newline character
+    if response["text"].startswith("\n"):
+        response["text"] = response["text"][1:]
+    response["text"] = response["text"].strip()
+
+    usage = UsageInfo()
+    function_call, finish_reason = None, "stop"
+    if request.tools:
+        try:
+            function_call = process_response(response["text"], use_tool=True)
+        except:
+            logger.warning("Failed to parse tool call, maybe the response is not a tool call or have been answered.")
+
+    logger.debug(f"==== message ====\n" + response["text"])
+
+    choice_data = CompletionResponseChoice(
+        index=0,
+        text=response["text"],
+        finish_reason=finish_reason,
+    )
+    task_usage = UsageInfo.model_validate(response["usage"])
+    for usage_key, usage_value in task_usage.model_dump().items():
+        setattr(usage, usage_key, getattr(usage, usage_key) + usage_value)
+
+    return CompletionResponse(
+        model=request.model,
+        id="",  # for open_source model, id is empty
+        choices=[choice_data],
+        object="completion"
+    )
+
+
 if __name__ == "__main__":
     # Load LLM
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, trust_remote_code=True)
