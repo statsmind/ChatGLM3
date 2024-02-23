@@ -59,7 +59,7 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
         inputs = tokenizer.build_chat_input(query, history=messages[:-1], role=role)
     else:
         prompt = params["prompt"]
-        inputs = tokenizer.encode(prompt, return_tensors='pt')
+        inputs = tokenizer(prompt, return_tensors='pt')
 
     inputs = inputs.to(model.device)
     input_echo_len = len(inputs["input_ids"][0])
