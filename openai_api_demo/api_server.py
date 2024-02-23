@@ -528,6 +528,7 @@ class CompletionRequest(BaseModel):
     max_tokens: Optional[int] = None
     stream: Optional[bool] = False
     repetition_penalty: Optional[float] = 1.1
+    tools: Optional[List[any]] = None
 
 
 class CompletionResponseChoice(BaseModel):
