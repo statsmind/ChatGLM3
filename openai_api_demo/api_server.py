@@ -186,7 +186,6 @@ class CompletionResponseChoice(BaseModel):
 class CompletionResponse(BaseModel):
     id: str
     choices: List[CompletionResponseChoice]
-    created: int
     model: str
     object: str
 
