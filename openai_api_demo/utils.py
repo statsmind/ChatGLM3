@@ -67,10 +67,15 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
     if input_echo_len >= model.config.seq_length:
         print(f"Input length larger than {model.config.seq_length}")
 
-    eos_token_id = [
-        tokenizer.eos_token_id,
-        tokenizer.get_command("<|user|>"),
-    ]
+    if "messages" in params:
+        eos_token_id = [
+            tokenizer.eos_token_id,
+            tokenizer.get_command("<|user|>"),
+        ]
+    else:
+        eos_token_id = [
+            tokenizer.eos_token_id
+        ]
 
     gen_kwargs = {
         "max_new_tokens": max_new_tokens,
