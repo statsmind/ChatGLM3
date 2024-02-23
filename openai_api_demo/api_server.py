@@ -166,6 +166,31 @@ class ChatCompletionResponse(BaseModel):
     usage: Optional[UsageInfo] = None
 
 
+class CompletionRequest(BaseModel):
+    model: str
+    prompt: str
+    temperature: Optional[float] = 0.8
+    top_p: Optional[float] = 0.8
+    max_tokens: Optional[int] = None
+    stream: Optional[bool] = False
+    repetition_penalty: Optional[float] = 1.1
+    tools: Optional[List[str]] = None
+
+
+class CompletionResponseChoice(BaseModel):
+    index: int
+    text: str
+    finish_reason: str
+
+
+class CompletionResponse(BaseModel):
+    id: str
+    choices: List[CompletionResponseChoice]
+    created: int
+    model: str
+    object: str
+
+
 @app.get("/health")
 async def health() -> Response:
     """Health check."""
@@ -518,31 +543,6 @@ def contains_custom_function(value: str) -> bool:
     :return:
     """
     return value and 'get_' in value
-
-
-class CompletionRequest(BaseModel):
-    model: str
-    prompt: str
-    temperature: Optional[float] = 0.8
-    top_p: Optional[float] = 0.8
-    max_tokens: Optional[int] = None
-    stream: Optional[bool] = False
-    repetition_penalty: Optional[float] = 1.1
-    tools: Optional[List[any]] = None
-
-
-class CompletionResponseChoice(BaseModel):
-    index: int
-    text: str
-    finish_reason: str
-
-
-class CompletionResponse(BaseModel):
-    id: str
-    choices: List[CompletionResponseChoice]
-    created: int
-    model: str
-    object: str
 
 
 @app.post("/v1/completions", response_model=CompletionResponse)
