@@ -66,6 +66,7 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
             inputs = tokenizer(prompt, add_special_tokens=True, return_tensors='pt')
 
     decoded_tokens = [tokenizer.decode(input_ids) for input_ids in inputs['input_ids']]
+    logger.debug(f"==== input token ids ====\n{inputs}")
     logger.debug(f"==== input tokens ====\n{decoded_tokens}")
 
     inputs = inputs.to(model.device)
