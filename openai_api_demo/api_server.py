@@ -609,10 +609,6 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, trust_remote_code=True)
     model = AutoModel.from_pretrained(MODEL_PATH, trust_remote_code=True, device_map="auto").eval()
 
-    if len(sys.argv) > 1:
-        logger.debug("using half dtype")
-        model = model.half()
-
     # load Embedding
     embedding_model = SentenceTransformer(EMBEDDING_PATH, device="cuda")
     uvicorn.run(app, host='0.0.0.0', port=8000, workers=1)
