@@ -26,6 +26,7 @@ Note:
 """
 
 import os
+import sys
 import time
 import tiktoken
 import torch
@@ -607,6 +608,10 @@ if __name__ == "__main__":
     # Load LLM
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, trust_remote_code=True)
     model = AutoModel.from_pretrained(MODEL_PATH, trust_remote_code=True, device_map="auto").eval()
+
+    if len(sys.argv) > 1:
+        logger.debug("using half dtype")
+        model = model.half()
 
     # load Embedding
     embedding_model = SentenceTransformer(EMBEDDING_PATH, device="cuda")
