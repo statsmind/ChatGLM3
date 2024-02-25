@@ -6,6 +6,9 @@ from transformers.generation.logits_process import LogitsProcessor
 from typing import Union, Tuple
 from loguru import logger
 
+from openai_api_demo.legacy_tokenizer import LegacySPTokenizer
+
+legacy_tokenizer = None
 
 class InvalidScoreLogitsProcessor(LogitsProcessor):
     def __call__(
@@ -46,6 +49,8 @@ def process_response(output: str, use_tool: bool = False) -> Union[str, dict]:
 
 @torch.inference_mode()
 def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokenizer, params: dict):
+    global legacy_tokenizer
+
     tools = params["tools"]
     temperature = float(params.get("temperature", 1.0))
     repetition_penalty = float(params.get("repetition_penalty", 1.0))
@@ -59,8 +64,11 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
 
         inputs = tokenizer.build_chat_input(query, history=messages[:-1], role=role)
     else:
-        old_encode_special_tokens = tokenizer.encode_special_tokens
-        tokenizer.encode_special_tokens = True
+        if legacy_tokenizer is None:
+            legacy_tokenizer = LegacySPTokenizer(tokenizer.vocab_size)
+
+        old_tokenizer = tokenizer.tokenizer
+        tokenizer.tokenizer = legacy_tokenizer
 
         prompt = params["prompt"]
         if '[gMASK]' in prompt:
@@ -68,7 +76,7 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
         else:
             inputs = tokenizer(prompt, add_special_tokens=True, return_tensors='pt')
 
-        tokenizer.encode_special_tokens = old_encode_special_tokens
+        tokenizer.tokenizer = old_tokenizer
 
     decoded_tokens = [tokenizer.decode(input_ids) for input_ids in inputs['input_ids']]
     logger.debug(f"==== input token ids ====\n{inputs}")
