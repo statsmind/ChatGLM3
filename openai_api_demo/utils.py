@@ -6,7 +6,7 @@ from transformers.generation.logits_process import LogitsProcessor
 from typing import Union, Tuple
 from loguru import logger
 
-from openai_api_demo.legacy_tokenizer import LegacySPTokenizer
+from legacy_tokenizer import LegacySPTokenizer
 
 legacy_tokenizer = None
 
