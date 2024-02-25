@@ -59,11 +59,16 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
 
         inputs = tokenizer.build_chat_input(query, history=messages[:-1], role=role)
     else:
+        old_encode_special_tokens = tokenizer.encode_special_tokens
+        tokenizer.encode_special_tokens = True
+
         prompt = params["prompt"]
         if '[gMASK]' in prompt:
             inputs = tokenizer(prompt, add_special_tokens=False, return_tensors='pt')
         else:
             inputs = tokenizer(prompt, add_special_tokens=True, return_tensors='pt')
+
+        tokenizer.encode_special_tokens = old_encode_special_tokens
 
     decoded_tokens = [tokenizer.decode(input_ids) for input_ids in inputs['input_ids']]
     logger.debug(f"==== input token ids ====\n{inputs}")
