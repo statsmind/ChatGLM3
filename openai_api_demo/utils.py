@@ -65,7 +65,7 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
         inputs = tokenizer.build_chat_input(query, history=messages[:-1], role=role)
     else:
         if legacy_tokenizer is None:
-            legacy_tokenizer = LegacySPTokenizer(tokenizer.vocab_size)
+            legacy_tokenizer = LegacySPTokenizer(tokenizer.vocab_file)
 
         old_tokenizer = tokenizer.tokenizer
         tokenizer.tokenizer = legacy_tokenizer
