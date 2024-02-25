@@ -4,6 +4,7 @@ import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 from transformers.generation.logits_process import LogitsProcessor
 from typing import Union, Tuple
+from loguru import logger
 
 
 class InvalidScoreLogitsProcessor(LogitsProcessor):
@@ -60,6 +61,9 @@ def generate_stream_chatglm3(model: PreTrainedModel, tokenizer: PreTrainedTokeni
     else:
         prompt = params["prompt"]
         inputs = tokenizer(prompt, return_tensors='pt')
+
+    decoded_tokens = [tokenizer.decode(input_ids) for input_ids in inputs['input_ids']]
+    logger.debug(f"==== input tokens ====\n{decoded_tokens}")
 
     inputs = inputs.to(model.device)
     input_echo_len = len(inputs["input_ids"][0])
