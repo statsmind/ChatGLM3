@@ -12,8 +12,8 @@
 
 [Read this in English.](./README_en.md)
 
-📔 关于`ChatGLM3-6B`
-更为详细的使用信息，可以参考
+📔 关于`ChatGLM3-6B` 更为详细的使用信息，可以参考
+
 + [ChatGLM3 开放技术文档](https://lslfd0slxc.feishu.cn/wiki/WvQbwIJ9tiPAxGk8ywDck6yfnof?from=from_copylink)
 + [Bilibili video](https://www.bilibili.com/video/BV1uC4y1J7yA)
 + [YouTube video](https://www.youtube.com/watch?v=Pw9PB6R7ORA)
@@ -25,8 +25,12 @@
 + [智谱清言](https://www.chatglm.cn) 体验最新版 GLM-4，包括 **GLMs，All tools**等功能，下载 智谱清言 APP
   或者使用 [网页端](https://www.chatglm.cn)。
 + [API平台](https://open.bigmodel.cn/) 新一代 API 平台已经上线，您可以直接在 API
-  平台上体验 `GLM-4`、`GLM-3-Turbo`、`CharGLM-3`，`CogView-3` 等新模型。
+  平台上体验 `GLM-4`、`GLM-3-Turbo`、`CharacterGLM-3`，`CogView-3` 等新模型。
   其中`GLM-4`、`GLM-3-Turbo`两个模型支持了 `System Prompt`、`Function Call`、 `Retrieval`、`Web_Search`等新功能，欢迎体验。
+
++ [GLM4 API 开源教程](https://github.com/MetaGLM/glm-cookbook/) GLM-4 API教程和基础应用，欢迎尝试。
+  API相关问题可以在本开源教程疑问，或者使用[GLM-4 API AI助手](https://open.bigmodel.cn/shareapp/v1/?share_code=sQwt5qyqYVaNh1O_87p8O)
+  来获得常见问题的帮助。
 
 -----
 
@@ -58,11 +62,11 @@ ChatGLM3 开源模型旨在与开源社区一起推动大模型技术发展，�
 
 ## 模型列表
 
-|      Model       | Seq Length |                                                                                                   Download                                                                                                   
-|:----------------:|:----------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:
-|   ChatGLM3-6B    |     8k     |        [HuggingFace](https://huggingface.co/THUDM/chatglm3-6b) \| [ModelScope](https://modelscope.cn/models/ZhipuAI/chatglm3-6b) \| [WiseModel](https://www.wisemodel.cn/models/ZhipuAI/chatglm3-6b)         
-| ChatGLM3-6B-Base |     8k     | [HuggingFace](https://huggingface.co/THUDM/chatglm3-6b-base) \| [ModelScope](https://modelscope.cn/models/ZhipuAI/chatglm3-6b-base) \| [WiseModel](https://www.wisemodel.cn/models/ZhipuAI/chatglm3-6b-base) 
-| ChatGLM3-6B-32K  |    32k     |  [HuggingFace](https://huggingface.co/THUDM/chatglm3-6b-32k) \| [ModelScope](https://modelscope.cn/models/ZhipuAI/chatglm3-6b-32k) \| [WiseModel](https://www.wisemodel.cn/models/ZhipuAI/chatglm3-6b-32k)   
+|      Model       | Seq Length |                                                                                                   Download                                                                                                   |
+|:----------------:|:----------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|   ChatGLM3-6B    |     8k     |        [HuggingFace](https://huggingface.co/THUDM/chatglm3-6b) \| [ModelScope](https://modelscope.cn/models/ZhipuAI/chatglm3-6b) \| [WiseModel](https://www.wisemodel.cn/models/ZhipuAI/chatglm3-6b)         |
+| ChatGLM3-6B-Base |     8k     | [HuggingFace](https://huggingface.co/THUDM/chatglm3-6b-base) \| [ModelScope](https://modelscope.cn/models/ZhipuAI/chatglm3-6b-base) \| [WiseModel](https://www.wisemodel.cn/models/ZhipuAI/chatglm3-6b-base) |
+| ChatGLM3-6B-32K  |    32k     |  [HuggingFace](https://huggingface.co/THUDM/chatglm3-6b-32k) \| [ModelScope](https://modelscope.cn/models/ZhipuAI/chatglm3-6b-32k) \| [WiseModel](https://www.wisemodel.cn/models/ZhipuAI/chatglm3-6b-32k)   |
 
 请注意，所有模型的最新更新都会在 Huggingface 率先发布。 ModelScope 和 WiseModel 由于没有与 Huggingface 同步，需要开发人员手动更新，可能会在
 Huggingface 更新后一段时间内同步更新。
@@ -74,10 +78,11 @@ Huggingface 更新后一段时间内同步更新。
 推理加速：
 
 * [chatglm.cpp](https://github.com/li-plus/chatglm.cpp): 类似 llama.cpp 的量化加速推理方案，实现笔记本上实时对话
-* [ChatGLM3-TPU](https://github.com/sophgo/ChatGLM3-TPU): 采用TPU加速推理方案，在算能端侧芯片BM1684X（16T@FP16，内存16G）上实时运行约7.5
-  token/s
+* [ChatGLM3-TPU](https://github.com/sophgo/ChatGLM3-TPU): 采用TPU加速推理方案，在算能端侧芯片BM1684X（16T@FP16，内存16G）上实时运行约7.5 token/s
 * [TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM/tree/main):
-  NVIDIA开发的高性能GPU加速推理方案，可以参考此[步骤](./tensorrt_llm_demo/README.md)部署ChatGLM3
+  NVIDIA开发的高性能 GPU 加速推理方案，可以参考此 [步骤](./tensorrt_llm_demo/README.md) 部署 ChatGLM3-6B 模型
+* [OpenVINO](https://github.com/OpenVINO-dev-contest/chatglm3.openvino): 
+Intel 开发的高性能 CPU 和 GPU 加速推理方案，可以参考此 [步骤](./Intel_device_demo/openvino_demo/README.md) 部署 ChatGLM3-6B 模型
 
 高效微调：
 
@@ -99,7 +104,7 @@ Huggingface 更新后一段时间内同步更新。
 | Model            | GSM8K | MATH | BBH  | MMLU | C-Eval | CMMLU | MBPP | AGIEval |
 |------------------|:-----:|:----:|:----:|:----:|:------:|:-----:|:----:|:-------:|
 | ChatGLM2-6B-Base | 32.4  | 6.5  | 33.7 | 47.9 |  51.7  | 50.0  |  -   |    -    |
-| Best Baseline    | 52.1  | 13.1 | 45.0 | 60.1 |  63.5  | 62.2  | 47.5 |  45.8   
+| Best Baseline    | 52.1  | 13.1 | 45.0 | 60.1 |  63.5  | 62.2  | 47.5 |  45.8   |
 | ChatGLM3-6B-Base | 72.3  | 25.7 | 66.1 | 61.4 |  69.0  | 67.5  | 52.4 |  53.7   |
 
 > Best Baseline 指的是截止 2023年10月27日、模型参数在 10B 以下、在对应数据集上表现最好的预训练模型，不包括只针对某一项任务训练而未保持通用能力的模型。
@@ -306,6 +311,11 @@ Pro），在空余内存不足的情况下会使用硬盘上的虚拟内存，�
 
 如果你有多张 GPU，但是每张 GPU 的显存大小都不足以容纳完整的模型，那么可以将模型切分在多张GPU上。首先安装
 accelerate: `pip install accelerate`，然后即可正常加载模型。
+
+### OpenVINO Demo
+
+ChatGLM3-6B 已经支持使用 OpenVINO
+工具包进行加速推理，在英特尔的GPU和GPU设备上有较大推理速度提升。具体使用方法请参考 [OpenVINO Demo](Intel_device_demo/openvino_demo/README.md)。
 
 ### TensorRT-LLM Demo
 
